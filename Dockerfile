@@ -9,6 +9,7 @@ RUN apt-get update && \
 RUN apt-get install -y \
     python3.9 \
     virtualenv \
+    python3-venv \
     python3.9-distutils \
     python3-pip \
     postgresql-client \
