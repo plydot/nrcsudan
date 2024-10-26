@@ -16,7 +16,10 @@ RUN apt-get install -y \
     libpq-dev \
     sudo \
     git \
+    python3-gevent \
     && apt-get clean
+
+RUN apt-get install -y build-essential libssl-dev libffi-dev python3.9-dev python3-dev libldap2-dev libsasl2-dev
 
 RUN groupadd -g 1000 odoo15 && \
     useradd -u 1000 -g odoo15 -m -s /bin/bash odoo15
@@ -29,15 +32,18 @@ COPY . .
 
 USER odoo15
 
-RUN python3 -m venv /opt/odoo15/venv3.9 && \
+RUN virtualenv /opt/odoo15/venv3.9 -p python3.9 && \
     /opt/odoo15/venv3.9/bin/pip install --upgrade pip && \
+    /opt/odoo15/venv3.9/bin/pip install Cython==3.0.0a10 && \
+    /opt/odoo15/venv3.9/bin/pip install gevent==20.9.0 --no-build-isolation && \
     /opt/odoo15/venv3.9/bin/pip install -r requirements.txt
 
-COPY nrcsudan.conf /etc/odoo15/nrcsudan.conf
+RUN cp nrcsudan.conf /etc/odoo15/nrcsudan.conf
 
-COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
-
+COPY entrypoint.sh /etc/odoo15/entrypoint.sh
+USER root
+RUN chmod +x /etc/odoo15/entrypoint.sh
+USER odoo15
 EXPOSE 8069
 
-ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["/etc/odoo15/entrypoint.sh"]
