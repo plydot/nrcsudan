@@ -8,9 +8,9 @@ RUN apt-get update && \
 
 RUN apt-get install -y \
     python3.9 \
-    python3.9-venv \
+    virtualenv \
     python3.9-distutils \
-    python3.9-pip \
+    python3-pip \
     postgresql-client \
     libpq-dev \
     sudo \
