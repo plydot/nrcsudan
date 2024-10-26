@@ -24,11 +24,14 @@ RUN groupadd -g 1000 odoo15 && \
 RUN mkdir -p /opt/odoo15/venv3.9 /opt/odoo15/odoo /etc/odoo15 && \
     chown -R odoo15:odoo15 /opt/odoo15 /etc/odoo15
 
+RUN cd /opt/odoo15/odoo
+COPY . .
+
 USER odoo15
 
 RUN python3 -m venv /opt/odoo15/venv3.9 && \
     /opt/odoo15/venv3.9/bin/pip install --upgrade pip && \
-    /opt/odoo15/venv3.9/bin/pip install odoo==15.0
+    /opt/odoo15/venv3.9/bin/pip install -r requirements.txt
 
 COPY nrcsudan.conf /etc/odoo15/nrcsudan.conf
 
