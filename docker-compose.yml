@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+  odoo:
+    image: odoo15-nrcsudan
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: odoo15-nrcsudan
+    environment:
+      - PRIVATE_KEY_PATH=/etc/ssh/penitest_lmtpay_com_private.pem
+      - GITHUB_USERNAME=datapollsolutions
+      - GITHUB_TOKEN=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
+    volumes:
+      - ./nrcsudan.conf:/etc/odoo15/nrcsudan.conf
+    ports:
+      - "8069:8069"
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:15  # Use a PostgreSQL image
+    container_name: postgres-nrcsudan
+    environment:
+      POSTGRES_USER: odoo15
+      POSTGRES_PASSWORD: #0doo15@!
+      POSTGRES_DB: nrcsudan
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
